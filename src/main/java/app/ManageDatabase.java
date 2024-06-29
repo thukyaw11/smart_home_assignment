@@ -40,10 +40,8 @@ public class ManageDatabase extends javax.swing.JFrame {
      */
     public ManageDatabase() {
         initComponents();
-        viewTable();
-        viewInsertColTable();
-        viewDeleteColTable();
-        updateColumnInputs();
+        load();
+       
 
 
         
@@ -78,39 +76,39 @@ public class ManageDatabase extends javax.swing.JFrame {
            }
         });
         
-//    
+        editTableCombo.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String selectedTable = (String) editTableCombo.getSelectedItem();
 
-//        JPanel columnInputPanel = new JPanel();
-//        createPanel.add(columnInputPanel);
-//        columnInputPanel.setLayout(new BoxLayout(columnInputPanel, BoxLayout.Y_AXIS));
-//
-//        columnNames = new JTextField[10];
-//        columnTypes = new JComboBox[10];
-//        for (int i = 0; i < 10; i++) {
-//            JPanel columnRow = new JPanel();
-//            columnNames[i] = new JTextField(10);
-//            columnTypes[i] = new JComboBox<>(new String[]{"VARCHAR(255)", "INT", "DOUBLE", "DATE", "BOOLEAN"});
-//            columnRow.add(new JLabel("Column " + (i + 1) + ":"));
-//            columnRow.add(columnNames[i]);
-//            columnRow.add(columnTypes[i]);
-//            columnInputPanel.add(columnRow);
-//        }
-//
-//        JButton createTableButton = new JButton("Create Table");
-////        createTableButton.addActionListener(new ActionListener() {
-////            @Override
-////            public void actionPerformed(ActionEvent e) {
-////                createTable();
-////            }
-////        });
-//        createPanel.add(createTableButton);
-//
+                displayTableStructure(editTable, selectedTable, "edit");
+            }
+        });
+        
+        dropTableCombo.addActionListener(new ActionListener() {
+              public void actionPerformed(ActionEvent e) {
+                  String selectedTable = (String) dropTableCombo.getSelectedItem();
+                  
+                  displayTableStructure(dropTableStructure, selectedTable, "delete table");
+                  displayTable(dropTableContent, selectedTable);
+              }
+        });
+        
+        // add edit table listener
+        editTable.getSelectionModel().addListSelectionListener(e -> populateFieldsFromSelectedRow());
         pack();
         
         
       
     }
 
+    private void load() {
+        viewTable();
+        viewInsertColTable();
+        viewDeleteColTable();
+        viewEditColTable();
+        updateColumnInputs();
+        viewDropTable();
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -150,11 +148,28 @@ public class ManageDatabase extends javax.swing.JFrame {
         jPanel5 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         deleteTableComboBox = new javax.swing.JComboBox<>();
-        jButton1 = new javax.swing.JButton();
+        deleteColButton = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         deleteTable = new javax.swing.JTable();
         jPanel6 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
+        editTableCombo = new javax.swing.JComboBox<>();
+        editButton = new javax.swing.JButton();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        editTable = new javax.swing.JTable();
+        jLabel7 = new javax.swing.JLabel();
+        colNameTxtField = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
+        editColDataTypeCombo = new javax.swing.JComboBox<>();
+        nullableCheckbox = new javax.swing.JCheckBox();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel9 = new javax.swing.JLabel();
+        dropTableCombo = new javax.swing.JComboBox<>();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        dropTableStructure = new javax.swing.JTable();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        dropTableContent = new javax.swing.JTable();
+        dropTableButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Manage Database");
@@ -244,13 +259,13 @@ public class ManageDatabase extends javax.swing.JFrame {
                 .addGroup(deleteTableButtonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(deleteTableButtonLayout.createSequentialGroup()
                         .addGap(58, 58, 58)
-                        .addGroup(deleteTableButtonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(viewTableButton, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(createTableButton, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(insertColumnButton, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(deleteColumnButton, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(editTableButton, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(deleteTableButtonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(createTableButton, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
+                            .addComponent(insertColumnButton, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
+                            .addComponent(deleteColumnButton, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
+                            .addComponent(editTableButton, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
+                            .addComponent(deleteButton, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
+                            .addComponent(viewTableButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(deleteTableButtonLayout.createSequentialGroup()
                         .addGap(19, 19, 19)
                         .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -318,7 +333,7 @@ public class ManageDatabase extends javax.swing.JFrame {
                     .addComponent(viewTableCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(48, Short.MAX_VALUE))
+                .addContainerGap(88, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("tab1", viewPanel);
@@ -418,17 +433,17 @@ public class ManageDatabase extends javax.swing.JFrame {
                 .addComponent(insertColumnBtn))
             .addGap(18, 18, 18)
             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 460, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addContainerGap(33, Short.MAX_VALUE))
+            .addContainerGap(73, Short.MAX_VALUE))
     );
 
     jTabbedPane1.addTab("tab3", jPanel4);
 
     jLabel3.setText("Select Table");
 
-    jButton1.setText("Delete");
-    jButton1.addActionListener(new java.awt.event.ActionListener() {
+    deleteColButton.setText("Delete");
+    deleteColButton.addActionListener(new java.awt.event.ActionListener() {
         public void actionPerformed(java.awt.event.ActionEvent evt) {
-            jButton1ActionPerformed(evt);
+            deleteColButtonActionPerformed(evt);
         }
     });
 
@@ -455,7 +470,7 @@ public class ManageDatabase extends javax.swing.JFrame {
                 .addComponent(jScrollPane3)
                 .addGroup(jPanel5Layout.createSequentialGroup()
                     .addGap(0, 413, Short.MAX_VALUE)
-                    .addComponent(jButton1)
+                    .addComponent(deleteColButton)
                     .addGap(18, 18, 18)
                     .addComponent(jLabel3)
                     .addGap(18, 18, 18)
@@ -469,36 +484,169 @@ public class ManageDatabase extends javax.swing.JFrame {
             .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(jLabel3)
                 .addComponent(deleteTableComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(jButton1))
+                .addComponent(deleteColButton))
             .addGap(18, 18, 18)
             .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addContainerGap(22, Short.MAX_VALUE))
+            .addContainerGap(62, Short.MAX_VALUE))
     );
 
     jTabbedPane1.addTab("tab4", jPanel5);
 
-    jLabel2.setText("tab 5");
+    jLabel2.setText("Select Table");
+
+    editButton.setText("Save");
+    editButton.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            editButtonActionPerformed(evt);
+        }
+    });
+
+    editTable.setModel(new javax.swing.table.DefaultTableModel(
+        new Object [][] {
+            {},
+            {},
+            {},
+            {}
+        },
+        new String [] {
+
+        }
+    ));
+    jScrollPane4.setViewportView(editTable);
+
+    jLabel7.setText("Column Name");
+
+    jLabel8.setText("Type");
+
+    editColDataTypeCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "VARCHAR(255)", "INTEGER", "DATE", "BOOLEAN", "DECIMAL" }));
+
+    nullableCheckbox.setText("Nullable");
+    nullableCheckbox.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            nullableCheckboxActionPerformed(evt);
+        }
+    });
 
     javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
     jPanel6.setLayout(jPanel6Layout);
     jPanel6Layout.setHorizontalGroup(
         jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
         .addGroup(jPanel6Layout.createSequentialGroup()
-            .addGap(224, 224, 224)
-            .addComponent(jLabel2)
-            .addContainerGap(506, Short.MAX_VALUE))
+            .addContainerGap()
+            .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel6Layout.createSequentialGroup()
+                    .addComponent(jLabel7)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(colNameTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(40, 40, 40)
+                    .addComponent(jLabel8)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(editColDataTypeCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(35, 35, 35)
+                    .addComponent(nullableCheckbox)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 124, Short.MAX_VALUE)
+                    .addComponent(editButton))
+                .addComponent(jScrollPane4)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(jLabel2)
+                    .addGap(18, 18, 18)
+                    .addComponent(editTableCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)))
+            .addGap(41, 41, 41))
     );
     jPanel6Layout.setVerticalGroup(
         jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
         .addGroup(jPanel6Layout.createSequentialGroup()
-            .addGap(125, 125, 125)
-            .addComponent(jLabel2)
-            .addContainerGap(413, Short.MAX_VALUE))
+            .addGap(20, 20, 20)
+            .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(jLabel2)
+                .addComponent(editTableCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGap(18, 18, 18)
+            .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(jLabel7)
+                .addComponent(colNameTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel8)
+                .addComponent(editColDataTypeCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(nullableCheckbox)
+                .addComponent(editButton))
+            .addContainerGap(125, Short.MAX_VALUE))
     );
 
     jTabbedPane1.addTab("tab5", jPanel6);
 
-    getContentPane().add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 0, 760, 590));
+    jLabel9.setText("Select Table");
+
+    dropTableStructure.setModel(new javax.swing.table.DefaultTableModel(
+        new Object [][] {
+            {},
+            {},
+            {},
+            {}
+        },
+        new String [] {
+
+        }
+    ));
+    jScrollPane5.setViewportView(dropTableStructure);
+
+    dropTableContent.setModel(new javax.swing.table.DefaultTableModel(
+        new Object [][] {
+            {},
+            {},
+            {},
+            {}
+        },
+        new String [] {
+
+        }
+    ));
+    jScrollPane6.setViewportView(dropTableContent);
+
+    dropTableButton.setText("Delete");
+    dropTableButton.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            dropTableButtonActionPerformed(evt);
+        }
+    });
+
+    javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+    jPanel1.setLayout(jPanel1Layout);
+    jPanel1Layout.setHorizontalGroup(
+        jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+            .addContainerGap()
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 722, Short.MAX_VALUE)
+                .addComponent(jScrollPane5)
+                .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(dropTableButton)
+                    .addGap(18, 18, 18)
+                    .addComponent(jLabel9)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(dropTableCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
+            .addGap(32, 32, 32))
+    );
+    jPanel1Layout.setVerticalGroup(
+        jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGap(22, 22, 22)
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(jLabel9)
+                .addComponent(dropTableCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(dropTableButton))
+            .addGap(18, 18, 18)
+            .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addContainerGap(45, Short.MAX_VALUE))
+    );
+
+    jTabbedPane1.addTab("tab6", jPanel1);
+
+    getContentPane().add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, -40, 760, 630));
 
     pack();
     setLocationRelativeTo(null);
@@ -602,6 +750,72 @@ public class ManageDatabase extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, e);
             }
         } 
+    }
+    
+    private void viewEditColTable() {
+        ResultSet rs = null;
+        Statement stmt = null;
+        try {
+            editTableCombo.removeAllItems();
+            Connection con = DBService.getConnection();
+            stmt = con.createStatement();
+            rs = stmt.executeQuery("show tables");
+
+            while (rs.next()) {
+                String tables = rs.getString("Tables_in_smart_home");
+                editTableCombo.addItem(tables);
+            }
+            con.close();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        } finally {
+            String selectedTable = (String) editTableCombo.getSelectedItem();
+            displayTableStructure(editTable, selectedTable, "edit");
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, e);
+            }
+        }
+    }
+    
+        private void viewDropTable() {
+        ResultSet rs = null;
+        Statement stmt = null;
+        try {
+            dropTableCombo.removeAllItems();
+            Connection con = DBService.getConnection();
+            stmt = con.createStatement();
+            rs = stmt.executeQuery("show tables");
+
+            while (rs.next()) {
+                String tables = rs.getString("Tables_in_smart_home");
+                dropTableCombo.addItem(tables);
+            }
+            con.close();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        } finally {
+            String selectedTable = (String) dropTableCombo.getSelectedItem();
+            displayTableStructure(dropTableStructure, selectedTable, "edit");
+            displayTable(dropTableContent, selectedTable);
+
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, e);
+            }
+        }
     }
     
     private void updateColumnInputs() {
@@ -811,7 +1025,7 @@ public class ManageDatabase extends javax.swing.JFrame {
         saveNewColumn((DefaultTableModel) insertColTable.getModel(), tableName);
     }//GEN-LAST:event_insertColumnBtnActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void deleteColButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteColButtonActionPerformed
         // TODO add your handling code here:
         String tableName = (String) deleteTableComboBox.getSelectedItem();
         int selectedRow = deleteTable.getSelectedRow();
@@ -833,7 +1047,85 @@ public class ManageDatabase extends javax.swing.JFrame {
         } else {
             JOptionPane.showMessageDialog(this, "Table name and column name are required");
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_deleteColButtonActionPerformed
+
+    private void nullableCheckboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nullableCheckboxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_nullableCheckboxActionPerformed
+
+    private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
+        String tableName = (String) editTableCombo.getSelectedItem();
+        updateColumnActionPerformed(tableName);
+        
+    }//GEN-LAST:event_editButtonActionPerformed
+
+    private void dropTableButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dropTableButtonActionPerformed
+        String tableName = (String) dropTableCombo.getSelectedItem();
+
+        if (tableName != null && !tableName.isEmpty()) {
+            int confirm = JOptionPane.showConfirmDialog(this,
+                    "Are you sure you want to delete table '" + tableName + "'?",
+                    "Confirm Table Deletion",
+                    JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                dropTable(tableName);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Table name is required");
+        }
+    }//GEN-LAST:event_dropTableButtonActionPerformed
+    
+    private void dropTable(String tableName) { Connection con = null;
+        Statement stmt = null;
+        try {
+            con = DBService.getConnection();
+            stmt = con.createStatement();
+            String sql = "DROP TABLE " + tableName;
+            stmt.executeUpdate(sql);
+            JOptionPane.showMessageDialog(this, "Table '" + tableName + "' deleted successfully");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error deleting table: " + e.getMessage());
+        } finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Error closing resources: " + e.getMessage());
+            }
+        }
+    }
+    private void updateColumnActionPerformed(String tableName) {
+        int selectedRow = editTable.getSelectedRow();
+        if(selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Please select a column to update.");
+            return;
+        }
+        
+        String oldColumnName = (String) editTable.getValueAt(selectedRow, 0);
+        String newColumnName = colNameTxtField.getText();
+        String newDataType = (String) editColDataTypeCombo.getSelectedItem();
+        boolean isNullable = nullableCheckbox.isSelected();
+        String nullableValue = isNullable ? "NULL" : "NOT NULL";
+        System.out.println(tableName);
+
+        
+        String sql = String.format("ALTER TABLE %s CHANGE %s %s %s %s", tableName, oldColumnName, newColumnName, newDataType, nullableValue);
+
+        
+        try (Connection con = DBService.getConnection();
+              PreparedStatement pstmt = con.prepareStatement(sql)) {
+            pstmt.executeUpdate();
+            JOptionPane.showMessageDialog(this, "Column updated successfully!");
+            displayTableStructure(editTable, tableName, "edit");
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
     
     private void saveNewColumn(DefaultTableModel model, String tableName) {
         try {
@@ -856,8 +1148,6 @@ public class ManageDatabase extends javax.swing.JFrame {
                         sql.append(" NOT NULL");
                     }
                     
-                    System.out.println(sql);
-
                     Connection conn = DBService.getConnection();
                     PreparedStatement pstmt = conn.prepareStatement(sql.toString());
                     pstmt.executeUpdate();
@@ -866,12 +1156,17 @@ public class ManageDatabase extends javax.swing.JFrame {
 
                     pstmt.close();
                     conn.close();
+                    
+                    displayTableStructure(deleteTable, tableName, "insert");
+
                 } else {
                     JOptionPane.showMessageDialog(null, "Primary key must be 'pri'");
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Nullable value must be 'YES' or 'NO'");
             }
+            
+            
             
         } catch(Exception e) {
             JOptionPane.showMessageDialog(null, e);
@@ -901,6 +1196,33 @@ public class ManageDatabase extends javax.swing.JFrame {
     }
     
     
+    private void populateFieldsFromSelectedRow() {
+        int selectedRow = editTable.getSelectedRow();
+        if(selectedRow != -1) {
+            String columnName = (String) editTable.getValueAt(selectedRow, 0);
+            String dataType = (String) editTable.getValueAt(selectedRow, 1);
+            System.out.println(dataType);
+            boolean isNullable = "YES".equals(editTable.getValueAt(selectedRow, 2));
+            
+            colNameTxtField.setText(columnName);
+            editColDataTypeCombo.setSelectedItem(mapTypeToComboOption(dataType));
+            nullableCheckbox.setSelected(isNullable);
+        }
+    }
+    
+    private String mapTypeToComboOption(String dbType) {
+        if(dbType.startsWith("varchar")) {
+            return "VARCHAR(255)";
+        } else if(dbType.equalsIgnoreCase("INT")) {
+            return "INTEGER";
+        } else if(dbType.equalsIgnoreCase("DECIMAL")) {
+            return "DECIMAL";
+        } else if(dbType.startsWith("enum")) {
+            return "ENUM";
+        }
+        
+        return dbType;
+    }
     
     /**
      * @param args the command line arguments
@@ -939,35 +1261,52 @@ public class ManageDatabase extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backButton;
+    private javax.swing.JTextField colNameTxtField;
     private javax.swing.JComboBox<String> columnCountCombo;
     private javax.swing.JPanel columnPanel;
     private javax.swing.JPanel createPanel;
     private javax.swing.JButton createTableButton;
     private javax.swing.JButton createTbl;
     private javax.swing.JButton deleteButton;
+    private javax.swing.JButton deleteColButton;
     private javax.swing.JButton deleteColumnButton;
     private javax.swing.JTable deleteTable;
     private javax.swing.JPanel deleteTableButton;
     private javax.swing.JComboBox<String> deleteTableComboBox;
+    private javax.swing.JButton dropTableButton;
+    private javax.swing.JComboBox<String> dropTableCombo;
+    private javax.swing.JTable dropTableContent;
+    private javax.swing.JTable dropTableStructure;
+    private javax.swing.JButton editButton;
+    private javax.swing.JComboBox<String> editColDataTypeCombo;
+    private javax.swing.JTable editTable;
     private javax.swing.JButton editTableButton;
+    private javax.swing.JComboBox<String> editTableCombo;
     private javax.swing.JComboBox<String> insertColComBox;
     private javax.swing.JTable insertColTable;
     private javax.swing.JButton insertColumnBtn;
     private javax.swing.JButton insertColumnButton;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JCheckBox nullableCheckbox;
     private javax.swing.JTextField tableNameField;
     private javax.swing.JTable tableView;
     private javax.swing.JPanel viewPanel;

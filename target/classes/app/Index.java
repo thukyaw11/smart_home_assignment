@@ -47,6 +47,15 @@ public class Index extends javax.swing.JFrame {
             }
         });
         
+        manageDataPanel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                setVisible(false);
+                ManageData mda = new ManageData();
+                mda.setVisible(true);
+            }
+        });
+        
         
         
     }
